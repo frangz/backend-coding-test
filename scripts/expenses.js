@@ -1,8 +1,4 @@
-var expensesApp = angular.module("expensesApp", ["restangular", "ui.date"]).config(function (RestangularProvider) {
-
-	RestangularProvider.setBaseUrl('http://alchemy.apiary-mock.com/v1');
-
-});
+var expensesApp = angular.module("expensesApp", ["restangular", "ui.date"]);
 
 expensesApp.controller("ExpensesCtrl", ["$scope", "Restangular", function ($scope, $Restangular) {
 
