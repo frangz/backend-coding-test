@@ -7,6 +7,7 @@
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 		<meta http-equiv="content-language" content="en-gb" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="styles/layout.css" />
 		<link rel="stylesheet" type="text/css" href="styles/jquery-ui.css" />
 		<script type="text/javascript" src="scripts/jquery-1.11.0.min.js"></script>
@@ -18,43 +19,64 @@
 		<script type="text/javascript" src="scripts/expenses.js"></script>
 	</head>
 	<body ng-controller="ExpensesCtrl">
-		<h1>Expenses</h1>
-		
-		<h2>Add an expense</h2>
-		<form name="expensesform">
-			<ul>
-				<li>
-					<label>Date</label>
-					<input type="text" ng-required="true" ng-model="newExpense.date" ui-date="dateOptions" placeholder="dd/mm/yyyy" />
-				</li>
-				<li>
-					<label>Amount</label>
-					<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" />
-				</li>
-				<li>
-					<label>Reason</label>
-					<textarea ng-required="true" ng-model="newExpense.reason" placeholder="why oh why?"></textarea>
-				</li>
-				<li>
-					<label></label>
-					<button ng-click="saveExpense()">Save Expense</button> <button ng-click="clearExpense()">cancel</button>
-				</li>
-			</ul>
-		</form>
-		
-		<h2>Submitted expenses</h2>
-		
-		<table>
-			<tr>
-				<th>Date</th>
-				<th>Amount (inc. VAT)</th>
-				<th>Reson</th>
-			</tr>
-			<tr ng-repeat="expense in expenses">
-				<td>{{expense.date | date:'dd MMM yyyy'}}</td>
-				<td>{{expense.amount | currency:"&pound;"}}</td>
-				<td>{{expense.reason}}</td>
-			</tr>
-		</table>
+		<div class="container">
+			<div class="row">
+				<h1>Expenses</h1>
+			</div>
+
+			<div class="row">
+				<h2>Add an expense</h2>
+				<form class="form-horizontal" name="expensesform">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Date</label>
+						<div class="col-sm-3">
+							<div class="left-inner-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							    <input type="text" ng-required="true" ng-model="newExpense.date" ui-date="dateOptions" placeholder="dd/mm/yyyy" class="form-control">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Amount</label>
+						<div class="col-sm-3">
+							<input type="text" ng-required="true" ng-model="newExpense.amount" placeholder="00.00" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Reason</label>
+						<div class="col-sm-5">
+							<textarea ng-required="true" ng-model="newExpense.reason" placeholder="why oh why?" class="form-control" rows="5"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"></label>
+						<div class="col-sm-10">
+							<button ng-click="saveExpense()" class="btn btn-primary">Save Expense</button> 
+							<button ng-click="clearExpense()" class="btn btn-link">cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="row">
+				<h2>Submitted expenses</h2>
+				
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Amount (inc. VAT)</th>
+							<th>Reson</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="expense in expenses">
+							<td>{{expense.date | date:'dd MMM yyyy'}}</td>
+							<td>{{expense.amount | currency:"&pound;"}}</td>
+							<td>{{expense.reason}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</body>
 </html>

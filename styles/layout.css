@@ -130,3 +130,20 @@ input, textarea {
 textarea {
 	height: 100px;
 }
+
+/** ADDED BY @frangz */
+.left-inner-addon {
+    position: relative;
+}
+.left-inner-addon input {
+    padding-left: 30px;    
+}
+.left-inner-addon span {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.table>tbody>tr>td {
+	border-top: none;
+}
