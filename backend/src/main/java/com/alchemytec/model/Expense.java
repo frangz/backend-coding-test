@@ -22,6 +22,8 @@ public class Expense {
 	private Date date;
 	
 	private double amount;
+
+	private double vat;
 	
 	private String reason;
 	
@@ -49,6 +51,14 @@ public class Expense {
 		this.amount = amount;
 	}
 	
+	public double getVat() {
+		return vat;
+	}
+
+	public void setVat(double vat) {
+		this.vat = vat;
+	}
+
 	public String getReason() {
 		return reason;
 	}
