@@ -10,23 +10,25 @@ run apt-get update
 run echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
 run apt-get install -y oracle-java8-installer
 
-# Install tools
-run apt-get install -y git maven
-
-# Clone project
-run git clone https://github.com/frangz/backend-coding-test.git
-
+# BACK END
+# Copy and build the backend application
+add backend /backend
+run apt-get install -y maven
+run cd /backend && mvn package
 # Install Tomcat
 run apt-get -y install tomcat7 
 run echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat7
-
-# Build project
-run cd backend-coding-test/backend && mvn package
-
 # Deploy
 run rm -rf /var/lib/tomcat7/webapps/ROOT*
-run cp backend-coding-test/backend/target/backend-coding-test-0.0-SNAPSHOT.war /var/lib/tomcat7/webapps/ROOT.war
+run cp /backend/target/backend-coding-test-0.0-SNAPSHOT.war /var/lib/tomcat7/webapps/ROOT.war
 
-expose 8080
+# FRONT END
+# Install Nginx
+run apt-get -y install nginx
+run rm -rf /usr/share/nginx/html/*
+add frontend /usr/share/nginx/html
+add nginx-default.conf /etc/nginx/sites-enabled/default
 
-cmd service tomcat7 start && tail -F /var/lib/tomcat7/logs/catalina.out
+expose 80
+
+cmd service nginx start && service tomcat7 start && tail -F /var/lib/tomcat7/logs/catalina.out
