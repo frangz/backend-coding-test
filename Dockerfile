@@ -16,16 +16,17 @@ run apt-get install -y git maven
 # Clone project
 run git clone https://github.com/frangz/backend-coding-test.git
 
-# Download Tomcat
-run wget http://apache.mirrors.timporter.net/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.tar.gz
-run tar zxf apache-tomcat-7.0.53.tar.gz
+# Install Tomcat
+run apt-get -y install tomcat7 
+run echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat7
 
 # Build project
 run cd backend-coding-test/backend && mvn package
 
 # Deploy
-run cp backend-coding-test/backend/target/backend-coding-test-0.0-SNAPSHOT.war apache-tomcat-7.0.53/webapps/
+run rm -rf /var/lib/tomcat7/webapps/ROOT*
+run cp backend-coding-test/backend/target/backend-coding-test-0.0-SNAPSHOT.war /var/lib/tomcat7/webapps/ROOT.war
 
 expose 8080
 
-cmd [ "/apache-tomcat-7.0.53/bin/startup.sh" ]
+cmd service tomcat7 start && tail -F /var/lib/tomcat7/logs/catalina.out
