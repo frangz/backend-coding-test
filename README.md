@@ -90,6 +90,76 @@ To stop the docker container, run *docker ps* to find out the container ID, and 
 docker stop <id>
 ```
 
-Docker makes it easy to build and run applications in different plataforms, such us Google Compute Engine or Amazon Web Services. AWS announced Docker support less than a month ago. Unfortunately, it seems the platform still needs some work. This simple example failed to deploy in it.
-
 Much of the steps that we described in the Dockerfile, like installing Tomcat and Nginx can be replaced by more complex configuration management tools like Puppet and Chef. This would allow a finer control on the server configuration, such us package versions or more complex configurations.
+
+
+Deploy to AWS Elastic Beanstalk
+-------------------------------
+
+Docker makes it easy to build and run applications in different plataforms, such us Google Compute Engine or Amazon Web Services. AWS announced support for Docker in Elastic Beanstalk just a few weeks ago. Here we will deploy our application to Elastic Beanstalk.
+
+1. Clone this project.
+2. Download the Elastick Beanstalk Command Line Tool (eb) from http://aws.amazon.com/code/6752709412171743. Make sure you have Python 2.7+ and Boto installed. You can install boto with pip.
+3. Run the set up script from your project root: AWS-ElasticBeanstalk-CLI-2.6.2/AWSDevTools/Linux/AWSDevTools-RepositorySetup.sh
+4. Prepare a IAM User account to use with eb. Elastic Beanstalk requires many permissions since it manages all your AWS services for you. You can use the following as an example, but be careful on where you store this credentials.
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticbeanstalk:*",
+        "ec2:*",
+        "elasticloadbalancing:*",
+        "autoscaling:*",
+        "cloudwatch:*",
+        "s3:*",
+        "sns:*",
+        "cloudformation:*",
+        "rds:*",
+        "sqs:*",
+        "iam:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+Remember to download the user's API keys.
+5. Set up eb: from the project root run:
+```bash
+eb init
+```
+You will need to answer questions about the Elastic Beanstalk application you are creating. Use these answers as a reference:
+```plain
+ 1. Enter the API keys of the user you created before
+ 2. Region: EU West (Ireland) 
+ 3. Enter names for the application and environment
+ 4. Tier: WebServer::Standard::1.0 
+ 5. Stack: 64bit Amazon Linux 2014.03 v1.0.4 running Docker 0.9.0
+ 6. Environment type: SingleInstance
+ 7. Create an RDS DB: No
+ 8. Attach an instance profile: default
+```
+6. Start your environment running:
+```bash
+eb start
+```
+You will be asked if you want to upload your latest git commit. Choose No. Wait until the environment finishes launching. You can follow the progress at the Web Console or by the command line messages. You will get your envinronment's URL once it's done. It will look like this: http://backend-coding-test-env-mwiym8c2zt.elasticbeanstalk.com/.
+
+7. Since the Dockerfile performs many heavy tasks we will need a bit more than a t1.micro instance. From the Web Console, modify your environment to use m1.small instances instead. This can also be done with configuration files. Once you confirm, it will take around 5 minutes to go back to Green (ready).
+
+8. Now you can upload the application. From the project root run:
+```bash
+eb push
+```
+This will upload your latest local git commit to the environment you launched. Since there is a lot of downloading in our Dockerfile, it will take some time. My test took **15-20 minutes** until the application became available at the environment's URL. Both the command line tool and the web console will timeout before that, but the instance will keep working after that.
+
+Now you have the application deployed in a m1.small instance in Ireland, inside a docker container. If we would have chosen LoadBalanced instead of SingleInstance we would have 2 instances and a load balancer, but for that we need to take the database outside Docker first. 
+
+If you make changes to the application you can upload them to the environment running *eb push* again. I haven't tested it, but I assume it should be faster than the first time.
+
+For a complete guide on deploying to AWS Elastic Beanstalk with docker, check: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker_eb.html
+
+**Remember to delete your Elastic Beanstalk application once you are done to avoid extra charges!**
