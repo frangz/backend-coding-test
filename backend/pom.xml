@@ -42,10 +42,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<properties>
-        <start-class>com.alchemytec.Main</start-class>
-    </properties>
-
 	<dependencies>
          <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,6 +62,10 @@
         </dependency>
         
         <!-- TEST DEPENDENCIES -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
