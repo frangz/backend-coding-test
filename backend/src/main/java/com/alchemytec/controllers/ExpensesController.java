@@ -12,6 +12,14 @@ import com.alchemytec.dto.ExpenseDTO;
 import com.alchemytec.model.Expense;
 import com.alchemytec.services.ExpenseService;
 
+/**
+ * Controllers serve web request and are usually the entry point to the presentation layer. 
+ * 
+ * This is a REST controller using Spring MVC. If we didn't have Spring in our application and we
+ * wanted to keep it lightweight, we could use many other frameworks that do REST, such as Jersey or RestEasy.
+ * 
+ * @author frangz
+ */
 @RestController
 @RequestMapping("/expenses")
 public class ExpensesController {
