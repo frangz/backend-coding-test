@@ -12,10 +12,21 @@ var expensesApp = angular.module("expensesApp", ["restangular", "ui.date"]).conf
 });
 ```
 
+Database preparation
+--------------------
+
+Before you run the backend application, you need to have a local MySQL database available. To create it with the right parameters, you can use the provided createdb.sql script.
+
+```bash
+> mysql -u root < createdb.sql 
+```
+
+The DDL will be run by Hibernate, so you don't need to create any tables.
+
 Building the backend
 --------------------
 
-The backend consist of one WAR file. To build it you will need Java 8 and Maven 3 installed. Earlier versions of Java should work as well, but haven't been tested. 
+The backend consists of one WAR file. To build it you will need Java 8 and Maven 3 installed. Earlier versions of Java should work as well, but haven't been tested. 
 
 To build the WAR file, run from inside the _backend_ folder.
 
@@ -24,7 +35,6 @@ To build the WAR file, run from inside the _backend_ folder.
 ```
 
 The resulting WAR file will be *target/backend-coding-test-0.0-SNAPSHOT.war*. You can deploy this into your favorite server. I tested Tomcat 7.
-
 
 Consuming the REST Services
 ---------------------------
@@ -45,16 +55,18 @@ Of course this is only for happy development. We wouldn't do this in more restri
 Run in Docker
 -------------
 
-If you don't have Java 8 or Maven in your machine, you can use Docker to set up a small virtual machine that runs the compiled code. You will see there is a file call Dockerfile. This is used to build the server image. In this case, the frontend is also included into the server, so you can do a complete test.
+If you don't have Java 8 or Maven in your machine, you can use Docker to set up a small virtual machine that runs the compiled code. You will see there is a file called Dockerfile. This is used to build the server image. In this case, the frontend is also included into the server, so you can do a complete test.
 
 The script does the following, starting with a plain Ubuntu as a base image:
 
 1. Update the OS packages.
 2. Install Java 8.
 3. Copy the Java code to the container and compile it.
-4. Install Tomcat 7 and deploy the WAR file in it.
+4. Install Tomcat 7.
+5. Install MySQL and initialize the required database.
+8. Deploy the WAR file.
 5. Install Nginx and copy the frontend files to the web root folder.
-7. Configure Nginx to proxy the /expense path to Tomcat.
+7. Configure Nginx to proxy the /expenses path to Tomcat.
 8. Expose the container's port 80.
 
 To build it, after you have installed Docker, run from the folder that contains Dockerfile:

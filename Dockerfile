@@ -11,18 +11,28 @@ run echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
 run apt-get install -y oracle-java8-installer
 
 # BACK END
+
 # Copy and build the backend application
 add backend /backend
 run apt-get install -y maven
 run cd /backend && mvn package
+
 # Install Tomcat
 run apt-get -y install tomcat7 
 run echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat7
+
+# Install and init database
+add createdb.sql /
+run DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
+run service mysql start && mysql -u root < createdb.sql
+
 # Deploy
 run rm -rf /var/lib/tomcat7/webapps/ROOT*
 run cp /backend/target/backend-coding-test-0.0-SNAPSHOT.war /var/lib/tomcat7/webapps/ROOT.war
 
+
 # FRONT END
+
 # Install Nginx
 run apt-get -y install nginx
 run rm -rf /usr/share/nginx/html/*
@@ -31,4 +41,4 @@ add nginx-default.conf /etc/nginx/sites-enabled/default
 
 expose 80
 
-cmd service nginx start && service tomcat7 start && tail -F /var/lib/tomcat7/logs/catalina.out
+cmd service mysql start && service nginx start && service tomcat7 start && tail -F /var/lib/tomcat7/logs/catalina.out
