@@ -3,7 +3,7 @@ package com.alchemytec.web;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 
-import com.alchemytec.TestApplication;
+import com.alchemytec.Application;
 
 /**
  * More Spring magic. This is the new web.xml.
@@ -15,7 +15,7 @@ public class WebXml extends SpringBootServletInitializer {
 	@Override
 	protected SpringApplicationBuilder configure(
 			SpringApplicationBuilder application) {
-		return application.sources(TestApplication.class);
+		return application.sources(Application.class);
 	}
 
 }
