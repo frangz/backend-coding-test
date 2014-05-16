@@ -13,13 +13,11 @@ run apt-get install -y oracle-java8-installer
 # BACK END
 
 # Copy and build the backend application
-add backend /backend
-run apt-get install -y maven
-run cd /backend && mvn package
-
-# Install Tomcat
-run apt-get -y install tomcat7 
+run apt-get install -y maven tomcat7
 run echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/default/tomcat7
+
+add backend /backend
+run cd /backend && mvn package
 
 # Install and init database
 add createdb.sql /
@@ -41,4 +39,4 @@ add nginx-default.conf /etc/nginx/sites-enabled/default
 
 expose 80
 
-cmd service mysql start && service nginx start && service tomcat7 start && tail -F /var/lib/tomcat7/logs/catalina.out
+cmd service mysql start && service nginx start && cd /var/lib/tomcat7 && export CATALINA_BASE=/var/lib/tomcat7 && export CATALINA_HOME=/usr/share/tomcat7 && /usr/share/tomcat7/bin/catalina.sh start && tail -F /var/log/tomcat7/catalina.out
